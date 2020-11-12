@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">uRun</string>
+    <string name="google_maps_key">alabala</string>
+    
+    <string-array name="filer_options">
+        <item>Date</item>
+        <item>Calories burned</item>
+        <item>Distance</item>
+        <item>Avg speed</item>
+        <item>Duration</item>
+    </string-array>
+
+</resources>

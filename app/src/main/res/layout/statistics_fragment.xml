@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <TextView
+        android:id="@+id/totalTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="00:00:00"
+        android:textSize="32sp"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toStartOf="@+id/totalDistanceTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/totalDistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="00.0 km"
+        android:textSize="32sp"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/totalTimeTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total time"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalTimeTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalTimeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalTimeTextView" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total distance"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalDistanceTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalDistanceTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalDistanceTextView" />
+
+    <TextView
+        android:id="@+id/totalAvgSpeedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="0.00 min/km"
+        android:textSize="32sp"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toStartOf="@+id/totalCaloriesTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+    <TextView
+        android:id="@+id/totalCaloriesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="0 cal"
+        android:textSize="32sp"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/totalAvgSpeedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total avg speed"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalAvgSpeedTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalAvgSpeedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalAvgSpeedTextView" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total calories"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalCaloriesTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalCaloriesTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalCaloriesTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

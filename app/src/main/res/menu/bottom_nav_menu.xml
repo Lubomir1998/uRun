@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="My runs"
+        android:icon="@drawable/your_runs_img"
+        android:id="@+id/myRunsFragment"/>
+
+    <item
+        android:title="Statistics"
+        android:icon="@drawable/statistics_img"
+        android:id="@+id/statisticsFragment"/>
+
+    <item
+        android:title="Me"
+        android:icon="@drawable/me_img"
+        android:id="@+id/meFragment"/>
+
+</menu>
