@@ -25,6 +25,7 @@ import com.example.urun.other.Constants.ACTION_PAUSE
 import com.example.urun.other.FormatStopwatchTime
 import com.example.urun.service.Polyline
 import com.example.urun.service.TrackingService
+import com.example.urun.ui.dialogs.CancelRunDialog
 import com.example.urun.viewModels.RunViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -78,6 +79,17 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.map.onCreate(savedInstanceState)
+
+        // when the screen rotates, the lambda field is set to null
+        // which means the stopRun() fun won't get called the first time
+        // ..................
+        // if savedInstanceState is null it means we haven't experienced screen rotation
+        if(savedInstanceState != null){
+            val cancelDialog = parentFragmentManager.findFragmentByTag("CancelTag") as CancelRunDialog?
+            cancelDialog?.setYesListener {
+                stopRun()
+            }
+        }
 
         getLocationPermission()
 
@@ -173,6 +185,7 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     }
 
     private fun stopRun(){
+        //binding.timeTextView.text = "00:00:00:00"
         val intent = Intent(requireContext(), TrackingService::class.java)
         intent.action = ACTION_FINISH
         requireContext().startService(intent)
@@ -180,17 +193,11 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     }
 
     private fun showDialog(){
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Cancel run")
-                .setMessage("Are you sure you want to delete the current run and all its data?")
-                .setPositiveButton("Yes"){_, _ ->
-                    stopRun()
-                }
-                .setNegativeButton("No"){dialogInterface, _ ->
-                    dialogInterface.cancel()
-                }
-                .create()
-        dialog.show()
+        CancelRunDialog().apply {
+            setYesListener {
+                stopRun()
+            }
+        }.show(parentFragmentManager, "CancelTag")
     }
 
     @SuppressLint("VisibleForTests")
@@ -261,8 +268,8 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
         this.isTracking = isTracking
         if(isTracking){
             binding.startOrStopBtn.text = "Stop"
-            binding.closeImg.visibility = View.GONE
             binding.finishBtn.visibility = View.GONE
+            binding.closeImg.visibility = View.VISIBLE
         }
         else{
             binding.startOrStopBtn.text = "Start"
@@ -279,6 +286,7 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
             requireContext().startService(intent)
         }
         else{
+            binding.closeImg.visibility = View.VISIBLE
             val intent = Intent(requireContext(), TrackingService::class.java)
             intent.action = ACTION_START_OR_RESUME
             requireContext().startService(intent)
@@ -304,9 +312,13 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
         })
 
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, {
-            currentTimeInMillis = it
-            val formattedTime = FormatStopwatchTime.getFormattedStopwatchTimeToString(currentTimeInMillis, true)
-            binding.timeTextView.text = formattedTime
+            if(TrackingService.isTracking.value != null) {
+                currentTimeInMillis = it
+                val formattedTime = FormatStopwatchTime.getFormattedStopwatchTimeToString(currentTimeInMillis, true)
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.timeTextView.text = formattedTime
+                }
+            }
         })
     }
 

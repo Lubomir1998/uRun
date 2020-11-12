@@ -27,6 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavMenu.setupWithNavController(supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController())
 
+        // this line means if we click the current bottom nav menu icon
+        // nothing will happen
+        binding.bottomNavMenu.setOnNavigationItemReselectedListener { /* NO OP */ }
+
         supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){
                 R.id.myRunsFragment, R.id.statisticsFragment, R.id.meFragment ->
