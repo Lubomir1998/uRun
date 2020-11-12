@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.urun.BuildConfig.API_KEY
 import com.example.urun.R
 import com.example.urun.data.Run
 import com.example.urun.other.Constants.ACTION_START_OR_RESUME
@@ -387,7 +386,8 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.map.onSaveInstanceState(outState)
+        val mapView: MapView? = requireActivity().findViewById(R.id.map)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStart() {
