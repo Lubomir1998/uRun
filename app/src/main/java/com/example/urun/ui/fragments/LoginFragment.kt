@@ -49,11 +49,6 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
     @set:Inject
     var firstTime = true
 
-//    private var isCameraPermissionEnabled = false
-//
-//    companion object{
-//        const val CAMERA_REQUEST_CODE = 99
-//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LoginFragmentBinding.inflate(inflater, container, false)
@@ -70,7 +65,6 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
             }
 
         }
-//        requestCameraPermission()
 
         if(!firstTime){
             goToMyRunsFragment(savedInstanceState)
@@ -86,13 +80,6 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
         }
 
         binding.choosePhotoImage.setOnClickListener {
-//            if(isCameraPermissionEnabled) {
-//                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//                startActivityForResult(intent, CAMERA_REQUEST_CODE)
-//            }
-//            else{
-//                requestCameraPermission()
-//            }
             cropActivityResultLauncher.launch(null)
         }
 
@@ -125,26 +112,6 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
         return false
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if(resultCode == RESULT_OK){
-//            if(requestCode == CAMERA_REQUEST_CODE && data?.data != null) {
-//                val image = data.data
-//                binding.userImg.setImageURI(image)
-//
-//                saveImgInSharedPrefs(image)
-//            }
-//        }
-//    }
-
-//    private fun requestCameraPermission(){
-//        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
-//        }
-//        else{
-//            isCameraPermissionEnabled = true
-//        }
-//    }
 
     private fun saveImgInSharedPrefs(uri: Uri?){
         val sharedPreferences = requireContext().getSharedPreferences("shpr", MODE_PRIVATE)

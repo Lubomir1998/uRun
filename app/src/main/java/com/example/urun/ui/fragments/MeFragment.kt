@@ -53,7 +53,6 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     private var age = 0
     private var weight = 0f
     private var userImg = ""
-//    private var isCameraPermissionEnabled = false
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,9 +63,7 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        if(!isCameraPermissionEnabled){
             binding.userImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.me_img))
-//        }
 
         cropActivityResultLauncher = registerForActivityResult(cropActivityResultContract){
             it?.let { uri ->
@@ -82,7 +79,6 @@ class MeFragment: Fragment(R.layout.me_fragment) {
 
         loadSharedPrefs()
 
-//        checkEditState(isEditImageSelected)
 
         name = sharedPreferences.getString("keyName", "") ?: ""
         age = sharedPreferences.getInt("keyAge", 20)
@@ -107,13 +103,6 @@ class MeFragment: Fragment(R.layout.me_fragment) {
         }
 
         binding.takePhotoImg.setOnClickListener {
-//            if(isCameraPermissionEnabled){
-//                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//                startActivityForResult(intent, 1000)
-//            }
-//            else{
-//                requestCameraPermission()
-//            }
             cropActivityResultLauncher.launch(null)
         }
 
@@ -160,26 +149,5 @@ class MeFragment: Fragment(R.layout.me_fragment) {
             .putString("keyUri", uri.toString())
             .apply()
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if(resultCode == Activity.RESULT_OK){
-//            if(requestCode == 1000 && data?.data != null) {
-//                val image = data.data
-//                binding.userImageView.setImageURI(image)
-//
-//                saveImgInSharedPrefs(image)
-//            }
-//        }
-//    }
-//
-//    private fun requestCameraPermission(){
-//        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
-//        }
-//        else{
-//            isCameraPermissionEnabled = true
-//        }
-//    }
 
 }
