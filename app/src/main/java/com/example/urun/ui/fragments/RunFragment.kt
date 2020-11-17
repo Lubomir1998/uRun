@@ -236,7 +236,6 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
 
         }
 
-
     }
 
 
