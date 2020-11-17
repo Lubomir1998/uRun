@@ -14,7 +14,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:textColor="#000"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="31 Oct 2020" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
         android:layout_marginTop="16dp"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/runImageView"
         tools:text="30:17" />
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="80dp"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintEnd_toStartOf="@+id/caloriesTextView"
         app:layout_constraintTop_toBottomOf="@+id/runImageView"
         tools:text="4:15" />
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="43dp"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/runImageView"
         tools:text="120" />
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="min"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/durationTextView"
         app:layout_constraintTop_toBottomOf="@+id/durationTextView" />
 
@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="avg. speed"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/avgSpeedTextView"
         app:layout_constraintTop_toBottomOf="@+id/avgSpeedTextView" />
 
@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="calories"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/caloriesTextView"
         app:layout_constraintTop_toBottomOf="@+id/caloriesTextView" />
 
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         tools:text="4.10"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintEnd_toStartOf="@+id/avgSpeedTextView"
         app:layout_constraintStart_toEndOf="@+id/durationTextView"
         app:layout_constraintTop_toBottomOf="@+id/runImageView" />
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="km"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/distanceTextView"
         app:layout_constraintTop_toBottomOf="@+id/distanceTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

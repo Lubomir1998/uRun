@@ -116,10 +116,18 @@ class TrackingService: LifecycleService() {
             super.onLocationResult(result)
 
             if(isTracking.value != null && isTracking.value!!){
-                result?.locations?.let{ locations ->
+                result?.locations?.let { locations ->
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Log.d(TAG, "*******onLocationResult: ${locations.size}")
+                    }
                     for(location in locations){
                         addPathPoints(location)
-
+                        CoroutineScope(Dispatchers.Main).launch {
+                            Log.d(
+                                TAG,
+                                "*****onLocationResult: ${location.latitude} and ${location.longitude}"
+                            )
+                        }
                     }
                 }
             }
@@ -174,6 +182,7 @@ class TrackingService: LifecycleService() {
 
         intent?.let {
             when(it.action){
+
                 ACTION_START_OR_RESUME -> {
                     // starting the run
                     if (isFirstRun) {

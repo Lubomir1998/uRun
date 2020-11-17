@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         // this line means if we click the current bottom nav menu icon
         // nothing will happen
-        binding.bottomNavMenu.setOnNavigationItemReselectedListener { /* NO OP */ }
+        //binding.bottomNavMenu.setOnNavigationItemReselectedListener { /* NO OP */ }
 
         supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){

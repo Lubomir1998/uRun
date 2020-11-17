@@ -2,6 +2,7 @@ package com.example.urun.ui.fragments
 
 import android.app.Activity.MODE_PRIVATE
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -12,6 +13,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,25 +23,37 @@ import androidx.navigation.fragment.findNavController
 import com.example.urun.R
 import com.example.urun.databinding.LoginFragmentBinding
 import com.google.android.material.snackbar.Snackbar
+import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment: Fragment(R.layout.login_fragment) {
 
-    private lateinit var binding: LoginFragmentBinding
+    private var cropActivityResultContract = object : ActivityResultContract<Any?, Uri?>(){
+        override fun createIntent(context: Context, input: Any?): Intent {
+            return CropImage.activity().getIntent(context)
+        }
 
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+            return CropImage.getActivityResult(intent)?.uri
+        }
+    }
+
+    private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
+
+    private lateinit var binding: LoginFragmentBinding
     @Inject
     lateinit var sharedPrefs: SharedPreferences
 
     @set:Inject
     var firstTime = true
 
-    private var isCameraPermissionEnabled = false
-
-    companion object{
-        const val CAMERA_REQUEST_CODE = 99
-    }
+//    private var isCameraPermissionEnabled = false
+//
+//    companion object{
+//        const val CAMERA_REQUEST_CODE = 99
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LoginFragmentBinding.inflate(inflater, container, false)
@@ -48,7 +63,14 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requestCameraPermission()
+        cropActivityResultLauncher = registerForActivityResult(cropActivityResultContract){
+            it?.let { uri ->
+                binding.userImg.setImageURI(uri)
+                saveImgInSharedPrefs(uri)
+            }
+
+        }
+//        requestCameraPermission()
 
         if(!firstTime){
             goToMyRunsFragment(savedInstanceState)
@@ -64,13 +86,14 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
         }
 
         binding.choosePhotoImage.setOnClickListener {
-            if(isCameraPermissionEnabled) {
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }
-            else{
-                requestCameraPermission()
-            }
+//            if(isCameraPermissionEnabled) {
+//                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+//            }
+//            else{
+//                requestCameraPermission()
+//            }
+            cropActivityResultLauncher.launch(null)
         }
 
 
@@ -102,26 +125,26 @@ class LoginFragment: Fragment(R.layout.login_fragment) {
         return false
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == RESULT_OK){
-            if(requestCode == CAMERA_REQUEST_CODE && data?.data != null) {
-                val image = data.data
-                binding.userImg.setImageURI(image)
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if(resultCode == RESULT_OK){
+//            if(requestCode == CAMERA_REQUEST_CODE && data?.data != null) {
+//                val image = data.data
+//                binding.userImg.setImageURI(image)
+//
+//                saveImgInSharedPrefs(image)
+//            }
+//        }
+//    }
 
-                saveImgInSharedPrefs(image)
-            }
-        }
-    }
-
-    private fun requestCameraPermission(){
-        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
-        }
-        else{
-            isCameraPermissionEnabled = true
-        }
-    }
+//    private fun requestCameraPermission(){
+//        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
+//        }
+//        else{
+//            isCameraPermissionEnabled = true
+//        }
+//    }
 
     private fun saveImgInSharedPrefs(uri: Uri?){
         val sharedPreferences = requireContext().getSharedPreferences("shpr", MODE_PRIVATE)

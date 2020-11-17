@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,9 +31,11 @@ import com.example.urun.viewModels.RunViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -56,6 +59,8 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     private var isTracking = false
     private var pathLines = mutableListOf<Polyline>()
     private var currentTimeInMillis = 0L
+
+    private  val TAG = "RunFragment"
 
     @set:Inject
     var weight: Float = 70f
@@ -115,7 +120,7 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
 
     private fun initMap(){
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        binding.map.getMapAsync{
+        binding.map.getMapAsync {
             map = it
             getDeviceLocation()
             addAllPolylines()
@@ -224,7 +229,7 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
                         val latLng = LatLng(currentLocation.latitude, currentLocation.longitude)
                         val zoomLevel = 17f
 
-                        moveCamera(latLng, zoomLevel)
+                        moveCamera(latLng, zoomLevel, "My Location")
                     }
                 }
             }
@@ -322,14 +327,14 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
         })
     }
 
-    private fun moveCamera(latLng: LatLng, zoomLevel: Float){
+    private fun moveCamera(latLng: LatLng, zoomLevel: Float, title: String){
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
 
         // add marker on recent location
-//        if(title != "My Location") {
-//            val marker = MarkerOptions().position(latLng).title(title)
-//            map!!.addMarker(marker)
-//        }
+        if(title != "My Location") {
+            val marker = MarkerOptions().position(latLng).title(title)
+            map!!.addMarker(marker)
+        }
 
     }
 
@@ -387,7 +392,8 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.map.onSaveInstanceState(outState)
+        val mapView: MapView? = requireActivity().findViewById(R.id.map)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStart() {

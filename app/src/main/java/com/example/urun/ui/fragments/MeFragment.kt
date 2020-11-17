@@ -1,6 +1,7 @@
 package com.example.urun.ui.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,6 +12,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -21,6 +24,7 @@ import com.example.urun.R
 import com.example.urun.databinding.MeFragmentBinding
 import com.example.urun.viewModels.MeViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,6 +34,18 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     private lateinit var binding: MeFragmentBinding
     private val model: MeViewModel by viewModels()
 
+    private var cropActivityResultContract = object : ActivityResultContract<Any?, Uri?>(){
+        override fun createIntent(context: Context, input: Any?): Intent {
+            return CropImage.activity().getIntent(context)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+            return CropImage.getActivityResult(intent)?.uri
+        }
+    }
+
+    private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
+
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
@@ -37,7 +53,7 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     private var age = 0
     private var weight = 0f
     private var userImg = ""
-    private var isCameraPermissionEnabled = false
+//    private var isCameraPermissionEnabled = false
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,8 +64,16 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(!isCameraPermissionEnabled){
+//        if(!isCameraPermissionEnabled){
             binding.userImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.me_img))
+//        }
+
+        cropActivityResultLauncher = registerForActivityResult(cropActivityResultContract){
+            it?.let { uri ->
+                binding.userImageView.setImageURI(uri)
+                saveImgInSharedPrefs(uri)
+            }
+
         }
 
         model.isEditSelectedLiveData.observe(requireActivity(), { isEditClicked ->
@@ -83,13 +107,14 @@ class MeFragment: Fragment(R.layout.me_fragment) {
         }
 
         binding.takePhotoImg.setOnClickListener {
-            if(isCameraPermissionEnabled){
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, 1000)
-            }
-            else{
-                requestCameraPermission()
-            }
+//            if(isCameraPermissionEnabled){
+//                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//                startActivityForResult(intent, 1000)
+//            }
+//            else{
+//                requestCameraPermission()
+//            }
+            cropActivityResultLauncher.launch(null)
         }
 
 
@@ -136,25 +161,25 @@ class MeFragment: Fragment(R.layout.me_fragment) {
             .apply()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
-            if(requestCode == 1000 && data?.data != null) {
-                val image = data.data
-                binding.userImageView.setImageURI(image)
-
-                saveImgInSharedPrefs(image)
-            }
-        }
-    }
-
-    private fun requestCameraPermission(){
-        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
-        }
-        else{
-            isCameraPermissionEnabled = true
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if(resultCode == Activity.RESULT_OK){
+//            if(requestCode == 1000 && data?.data != null) {
+//                val image = data.data
+//                binding.userImageView.setImageURI(image)
+//
+//                saveImgInSharedPrefs(image)
+//            }
+//        }
+//    }
+//
+//    private fun requestCameraPermission(){
+//        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 111)
+//        }
+//        else{
+//            isCameraPermissionEnabled = true
+//        }
+//    }
 
 }
