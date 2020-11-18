@@ -58,6 +58,9 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     private var isTracking = false
     private var pathLines = mutableListOf<Polyline>()
     private var currentTimeInMillis = 0L
+    private var distanceInMetres = 0
+    private var currentCalories = 0f
+    private var currentAvgPace = 0f
 
     private  val TAG = "RunFragment"
 
@@ -105,7 +108,18 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
 
 
         binding.startOrStopBtn.setOnClickListener {
-            pressStartOrStopBtn()
+            if(mLocationPermissionsGranted) {
+                pressStartOrStopBtn()
+            }
+            else{
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
         }
 
         binding.finishBtn.setOnClickListener {
@@ -189,7 +203,6 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
     }
 
     private fun stopRun(){
-        //binding.timeTextView.text = "00:00:00:00"
         val intent = Intent(requireContext(), TrackingService::class.java)
         intent.action = ACTION_FINISH
         requireContext().startService(intent)
@@ -322,6 +335,21 @@ class RunFragment: Fragment(R.layout.run_fragment), OnMapReadyCallback {
                     binding.timeTextView.text = formattedTime
                 }
             }
+        })
+
+        TrackingService.currentDistanceInMetres.observe(viewLifecycleOwner, {
+            distanceInMetres = it
+            binding.metresTextView.text = distanceInMetres.toString()
+        })
+
+        TrackingService.currentCalories.observe(viewLifecycleOwner, {
+            currentCalories = it
+            binding.currentCalTextView?.text = currentCalories.toString()
+        })
+
+        TrackingService.currentAvgPace.observe(viewLifecycleOwner, {
+            currentAvgPace = it
+            binding.avgpaceTextView?.text = FormatStopwatchTime.getAvgPace(currentAvgPace)
         })
     }
 

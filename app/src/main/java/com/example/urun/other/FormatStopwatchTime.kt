@@ -27,7 +27,14 @@ object FormatStopwatchTime {
         }
 
         return distance
+    }
 
+    fun getAvgPace(avgPace: Float): String {
+        val avgPaceSeconds = (avgPace - avgPace.toLong()) * 10
+        val seconds = ((avgPaceSeconds / 10) * 60).toLong()
+
+
+        return "${avgPace.toLong()}:${if(seconds < 10) "0$seconds" else seconds}"
     }
 
     fun getFormattedStopwatchTimeToString(millisecond: Long, includeMillis: Boolean = false, includeHours: Boolean = true): String{

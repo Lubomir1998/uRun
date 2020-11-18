@@ -22,7 +22,7 @@ class RunAdapter(var listOfRuns: List<Run>): RecyclerView.Adapter<RunAdapter.MyV
 
         holder.runImage.setImageBitmap(run.image)
         holder.caloriesTextView.text = run.calories.toString()
-        holder.avgSpeedTextView.text = run.avgPace.toString()
+        holder.avgSpeedTextView.text = FormatStopwatchTime.getAvgPace(run.avgPace)
         holder.distanceTextView.text = "${run.distanceInMetres / 1000f}"
         holder.durationTextView.text = FormatStopwatchTime.getFormattedStopwatchTimeToString(run.duration, false, false)
 

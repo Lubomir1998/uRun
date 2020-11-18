@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityCompat
@@ -63,7 +64,8 @@ class MeFragment: Fragment(R.layout.me_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            binding.userImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.me_img))
+        hideKeyboard(requireActivity())
+        binding.userImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.me_img))
 
         cropActivityResultLauncher = registerForActivityResult(cropActivityResultContract){
             it?.let { uri ->
@@ -138,7 +140,7 @@ class MeFragment: Fragment(R.layout.me_fragment) {
             binding.ageTextView.isEnabled = false
             binding.weightTextView.isEnabled = false
             binding.takePhotoImg.visibility = View.GONE
-
+            hideKeyboard(requireActivity())
         }
     }
 
@@ -148,6 +150,17 @@ class MeFragment: Fragment(R.layout.me_fragment) {
         sharedPreferences.edit()
             .putString("keyUri", uri.toString())
             .apply()
+    }
+
+    private fun hideKeyboard(activity: Activity) {
+        val imm: InputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

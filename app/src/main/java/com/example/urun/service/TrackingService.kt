@@ -17,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.urun.other.Constants.ACTION_FINISH
 import com.example.urun.other.Constants.ACTION_PAUSE
 import com.example.urun.other.Constants.ACTION_START_OR_RESUME
@@ -38,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import javax.inject.Inject
 
 typealias Polyline = MutableList<LatLng>
@@ -59,6 +59,9 @@ class TrackingService: LifecycleService() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var timeRunInSeconds = MutableLiveData<Long>()
 
+    @set:Inject
+    var weight: Float = 70f
+
     @Inject
     lateinit var baseNotification: NotificationCompat.Builder
 
@@ -69,6 +72,9 @@ class TrackingService: LifecycleService() {
         var isTracking = MutableLiveData<Boolean>()
         var pathLines = MutableLiveData<Polylines>()
         var timeRunInMillis = MutableLiveData<Long>()
+        var currentDistanceInMetres = MutableLiveData<Int>()
+        var currentCalories = MutableLiveData<Float>()
+        var currentAvgPace = MutableLiveData<Float>()
     }
 
     private fun initLiveDataValues(){
@@ -76,6 +82,9 @@ class TrackingService: LifecycleService() {
         pathLines.postValue(mutableListOf())
         timeRunInMillis.postValue(0L)
         timeRunInSeconds.postValue(0L)
+        currentDistanceInMetres.postValue(0)
+        currentCalories.postValue(0f)
+        currentAvgPace.postValue(0f)
     }
 
     @SuppressLint("VisibleForTests")
@@ -106,6 +115,21 @@ class TrackingService: LifecycleService() {
             pathLines.value?.apply {
                 last().add(pos)
                 pathLines.postValue(this)
+            }
+            var distance = 0
+            if(pathLines.value != null) {
+                for (polyline in pathLines.value!!)
+                    distance += FormatStopwatchTime.getRunDistance(polyline).toInt()
+            }
+            currentDistanceInMetres.postValue(distance)
+            currentCalories.postValue(((distance / 1000f ) * weight).toBigDecimal().setScale(2, RoundingMode.HALF_UP).toFloat())
+            if(timeRunInMillis.value != null) {
+                if(distance > 0) {
+                    currentAvgPace.postValue(
+                        ((timeRunInMillis.value!! / 1000f / 60) / (distance / 1000f)).toBigDecimal()
+                            .setScale(2, RoundingMode.FLOOR).toFloat()
+                    )
+                }
             }
         }
     }

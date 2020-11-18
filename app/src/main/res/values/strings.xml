@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">uRun</string>
-    <string name="google_maps_key">alabala</string>
+    <string name="google_maps_key">alabala
+</string>
     
     <string-array name="filer_options">
         <item>Date</item>
